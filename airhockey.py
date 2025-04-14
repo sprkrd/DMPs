@@ -20,7 +20,7 @@
 
 from Box2D.examples.framework import (Framework, Keys, main)
 from Box2D import (b2CircleShape, b2FixtureDef, b2ChainShape, b2PolygonShape,
-                   b2RevoluteJointDef, b2_pi)
+                   b2RevoluteJointDef, b2_pi, b2Vec2)
 
 from math import sqrt
 
@@ -59,6 +59,10 @@ class Airhockey(Framework):
         self.recorded_trajectory = None
         self.trigger_reset = False
         self.recording = False
+        self.reproducing = False
+        self.tracking = False
+        self.reproduction_timestep = 0
+        self.reproduction_length = 0
 
         walls = self.world.CreateStaticBody(
             shapes=[
@@ -102,8 +106,6 @@ class Airhockey(Framework):
             angularDamping=5,
             position=(-l/4, w/4))
 
-        self.pressed = False
-
     def Keyboard(self, key):
         if key == Keys.K_a:
             self.pressed = True
@@ -131,6 +133,19 @@ class Airhockey(Framework):
                         "dt": [1./self.settings.hz]
                 }
                 self.recording = True
+        elif key == Keys.K_p:
+            if self.recorded_trajectory is None:
+                try:
+                    with open("recorded_trajectory.json", "r") as f:
+                        self.recorded_trajectory = json.load(f)
+                except FileNotFoundError:
+                    print("trajectory file not found, create a trajectory first")
+            if self.recorded_trajectory is not None:
+                self.reproducing = True
+                self.reproduction_timestep = 0
+                self.reproduction_length = len(self.recorded_trajectory["position_x"])
+        elif key == Keys.K_t:
+            self.tracking = not self.tracking
 
     def ResetStatus(self):
         w = Airhockey.scale_factor * Airhockey.table_width
@@ -147,8 +162,24 @@ class Airhockey(Framework):
         if self.trigger_reset:
             self.ResetStatus()
             self.trigger_reset = False
-        if self.mouseWorld:
-            e = self.mouseWorld - self.mallet.worldCenter
+            
+        if self.reproducing and self.reproduction_timestep >= len(self.recorded_trajectory["position_x"]):
+            self.reproducing = False
+        
+        if self.reproducing:
+            target = b2Vec2(
+                self.recorded_trajectory["position_x"][self.reproduction_timestep],
+                self.recorded_trajectory["position_y"][self.reproduction_timestep]
+            )
+            self.reproduction_timestep += 1
+        elif self.mouseWorld and self.tracking:
+            target = self.mouseWorld
+        else:
+            target = None
+            
+        
+        if target is not None:
+            e = target - self.mallet.worldCenter
             de = - self.mallet.linearVelocity
             self.mallet.ApplyForce(self.P*e + self.D*de, self.mallet.worldCenter, True)
         if self.recording:
