@@ -1,0 +1,6 @@
+pygame
+Box2D
+numpy
+matplotlib
+scipy
+
