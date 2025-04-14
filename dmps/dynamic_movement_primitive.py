@@ -32,7 +32,7 @@ class DynamicMovementPrimitive:
 
     def _gen_bfs_parameters(self):
         self.bfs_centers = np.linspace(0, self.cs.run_time, self.n_bfs)
-        sigma = self.cs.run_time/(1.5*self.n_bfs)
+        sigma = self.cs.run_time/(self.n_bfs)
         self.bfs_h = - 1./(2*sigma**2)
 
     def _gen_weights(self, ftarget):
@@ -86,7 +86,7 @@ class DynamicMovementPrimitive:
         ftarget = np.zeros_like(y)
 
         for i in range(self.n_dmps):
-            ftarget[:,i] = ydd[:,i] - self.ay[i]*(self.by[i]*(self.g0-y[:,i]) - yd[:,i])
+            ftarget[:,i] = ydd[:,i] - self.ay[i]*(self.by[i]*(self.g0[i]-y[:,i]) - yd[:,i])
 
         self._gen_weights(ftarget)
 
@@ -124,8 +124,8 @@ class DynamicMovementPrimitive:
             f = np.dot(self.w[:,i], psi)*x/sum_psi
             if scale[i] > 1e-6:
                 f *= scale[i]
-            ydd_next[i] = self.ay[i]*(self.by[i]*(g[i] - y[i]) - yd[i]) + f
-        ydd_next /= tau
+            ydd_next[i] = ( self.ay[i]*(self.by[i]*(g[i] - y[i]) - tau*yd[i]) + f )
+        ydd_next /= tau*tau
         yd_next = yd + ydd_next*self.cs.dt
         y_next = y + yd_next*self.cs.dt
 
@@ -156,7 +156,7 @@ class DynamicMovementPrimitive:
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    dmp = DynamicMovementPrimitive(dt=0.01, n_bfs=100, ay=25)
+    dmp = DynamicMovementPrimitive(dt=0.01, n_bfs=100, n_dmps=1, ay=25)
 
     t = np.arange(0, 201) * 0.03
     y = 1 + np.sin(2*np.pi*0.5*t)
