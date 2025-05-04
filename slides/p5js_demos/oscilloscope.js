@@ -80,9 +80,11 @@ class Oscilloscope {
 
     _convert_y_value(y) {
         let config = this.config;
+        let ymin = config.y0;
+        let ymax = ymin + config.height;
         let mag_to_ycoord = config.height/config.A;
         let baseline = config.y0 + config.height/2;
-        return baseline - y*mag_to_ycoord;
+        return constrain(baseline - y*mag_to_ycoord, ymin, ymax);
     }
 
     _draw_signal() {
@@ -109,7 +111,7 @@ class Oscilloscope {
 
         stroke(this.#hrule.color);
         strokeWeight(1);
-        line(x0, y, x1, y);
+        dashed_line(x0, y, x1, y, 4);
     }
 
     add_horizontal_ruler(y, c) {
