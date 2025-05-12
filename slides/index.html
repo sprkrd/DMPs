@@ -4,27 +4,27 @@
     <head>
         <meta charset="utf-8">
 
-        <title>reveal.js - Ligthbox</title>
+        <title>Dynamic Movement Primitives - Lunch and Learn</title>
 
         <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
         <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/black.css" id="theme">
 
-        <style>
-            .reveal {
-                font-size: 24px;
-            }
-            .reveal figure {
-                margin: 0 0 1rem 0;
-                text-align: left;
-            }
-            .reveal figure img,
-            .reveal figure video {
-                margin: 0.25rem 0 0 0;
-            }
-            figcaption, a {
-                font-size: 16px;
-            }
-        </style>
+        <!-- <style> -->
+            <!-- .reveal { -->
+                <!-- font-size: 24px; -->
+            <!-- } -->
+            <!-- .reveal figure { -->
+                <!-- margin: 0 0 1rem 0; -->
+                <!-- text-align: left; -->
+            <!-- } -->
+            <!-- .reveal figure img, -->
+            <!-- .reveal figure video { -->
+                <!-- margin: 0.25rem 0 0 0; -->
+            <!-- } -->
+            <!-- figcaption, a { -->
+                <!-- font-size: 16px; -->
+            <!-- } -->
+        <!-- </style> -->
     </head>
 
     <body>
@@ -32,6 +32,15 @@
         <div class="reveal">
 
             <div class="slides">
+            
+                <section>
+                    <h1>Dynamic Movement Primitives</h1>
+                    
+                    <p>Lunch and Learn - 2025/May/12</p>
+                    
+                    <p>&#128100 Alejandro Suarez Hernandez</p>
+                    
+                </section>
 
                 <!--<section>-->
 
@@ -138,11 +147,17 @@
         </div>
 
         <script src="node_modules/reveal.js/dist/reveal.js"></script>
+        <script src="node_modules/reveal.js/plugin/notes/notes.js"></script>
+		<script src="node_modules/reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="node_modules/reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="node_modules/reveal.js/plugin/zoom/zoom.js"></script>
         <script>
             Reveal.initialize({
                 previewLinks: false,
                 width: 1280,
-                height: 720
+                height: 720,
+                slideNumber: "c/t",
+                plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes ]
             });
         </script>
 
