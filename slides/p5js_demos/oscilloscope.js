@@ -17,6 +17,7 @@ class Oscilloscope {
             A: 4,
             n_horizontal_divisions: 7,
             n_vertical_divisions: 3,
+            title: "",
             ...config
         };
         this.#data = new CircularBuffer(Math.floor(this.config.T/this.config.dt));
@@ -35,12 +36,12 @@ class Oscilloscope {
         if (this.#background === undefined) {
             this._draw_canvas();
             this._draw_grid();
-            
             this.#background = get(config.x0-1, config.y0-1, config.width+2, config.height+2);
         }
         else {
             image(this.#background, config.x0-1, config.y0-1);
         }
+        this._draw_title();
     }
 
     _draw_canvas() {
@@ -51,6 +52,15 @@ class Oscilloscope {
         fill(32);
 
         rect(config.x0, config.y0, config.width, config.height);
+    }
+
+    _draw_title() {
+        let config = this.config;
+        noStroke();
+        textAlign(CENTER, BOTTOM);
+        textSize(18);
+        fill(255);
+        text(config.title, config.x0 + config.width/2, config.y0);
     }
 
     _draw_grid() {
@@ -74,8 +84,6 @@ class Oscilloscope {
             let y = config.y0 + i*v_gap;
             dashed_line(config.x0, y, x_max, y, 4);
         }
-
-        let baseline = config.y0 + config.height/2;
     }
 
     _convert_y_value(y) {

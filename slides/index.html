@@ -6,8 +6,8 @@
 
         <title>Dynamic Movement Primitives - Lunch and Learn</title>
 
-        <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
-        <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/black.css" id="theme">
+        <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+        <link rel="stylesheet" href="reveal.js/dist/theme/black.css" id="theme">
 
         <!-- <style> -->
             <!-- .reveal { -->
@@ -42,115 +42,27 @@
                     
                 </section>
 
-                <!--<section>-->
+                <section>
+                    <h2>2nd Order ODE behavior</h2>
 
-                    <!--<h2>Preview Overlays</h2>-->
-
-                    <!--<div class="r-hstack items-start">-->
-                        <!--<div class="r-vstack items-start">-->
-                            <!--<h5>Images</h5>-->
-                            <!--<figure>-->
-                                <!--<figcaption>Preview with default settings:</figcaption>-->
-                                <!--<img height="50" src="https://static.slid.es/images/alphabet/v1/a.png" data-preview-image>-->
-                            <!--</figure>-->
-                            <!--<figure>-->
-                                <!--<figcaption>Preview with data-preview-fit="contain"</figcaption>-->
-                                <!--<img height="50" src="https://static.slid.es/images/alphabet/v1/a.png" data-preview-image data-preview-fit="contain">-->
-                            <!--</figure>-->
-                            <!--<figure>-->
-                                <!--<figcaption>Preview with data-preview-fit="cover"</figcaption>-->
-                                <!--<img height="50" src="https://static.slid.es/images/alphabet/v1/a.png" data-preview-image data-preview-fit="cover">-->
-                            <!--</figure>-->
-                            <!--<figure>-->
-                                <!--<figcaption>Preview another image (c)</figcaption>-->
-                                <!--<img height="50" src="https://static.slid.es/images/alphabet/v1/b.png" data-preview-image="https://static.slid.es/images/alphabet/v1/c.png">-->
-                            <!--</figure>-->
-                            <!--<a href="#" data-preview-image="https://static.slid.es/images/alphabet/v1/x.png">-->
-                                <!--Preview image from a link.-->
-                            <!--</a>-->
-                        <!--</div>-->
-
-                        <!--<div style="width: 1px; height: 30vh; margin: 0 3rem;background-color: #999;"></div>-->
-
-                        <!--<div class="r-vstack items-start">-->
-                            <!--<h5>Videos</h5>-->
-                            <!--<figure>-->
-                                <!--<figcaption>Preview video</figcaption>-->
-                                <!--<img height="50" src="https://static.slid.es/images/alphabet/v1/x.png" data-preview-video="https://static.slid.es/site/homepage/v1/homepage-video-editor.mp4">-->
-                            <!--</figure>-->
-                            <!--<figure>-->
-                                <!--<figcaption>Preview video</figcaption>-->
-                                <!--<video height="50" src="https://static.slid.es/site/homepage/v1/homepage-video-editor.mp4" data-preview-video></video>-->
-                            <!--</figure>-->
-                            <!--<a href="#" data-preview-video="https://static.slid.es/site/homepage/v1/homepage-video-editor.mp4">-->
-                                <!--Preview video from a link.-->
-                            <!--</a>-->
-                        <!--</div>-->
-
-                        <!--<div style="width: 1px; height: 30vh; margin: 0 3rem;background-color: #999;"></div>-->
-
-                        <!--<div class="r-vstack items-start">-->
-                            <!--<h5>Iframes</h5>-->
-                            <!--<a href="https://hakim.se">https://hakim.se | data-preview-link</a>-->
-                            <!--<a data-preview-link href="https://hakim.se">https://hakim.se | data-preview-link</a>-->
-                            <!--<br />-->
-                            <!--<a data-preview-link="false" href="https://hakim.se">https://hakim.se | data-preview-link=false</a>-->
-                            <!--<br />-->
-                            <!--<figure>-->
-                                <!--<figcaption>Preview link from an image</figcaption>-->
-                                <!--<img height="50" src="https://static.slid.es/images/alphabet/v1/a.png" data-preview-link="https://hakim.se">-->
-                            <!--</figure>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-                <!--</section>-->
-
-                <!--<section style="text-align: left;">-->
-
-                    <!--<h2>Lightbox</h2>-->
-
-                    <!--<div class="r-hstack items-start justify-start">-->
-                        <!--<div class="r-vstack items-start">-->
-                            <!--<h5>Images</h5>-->
-                            <!--<figure>-->
-                                <!--<img height="100" src="https://static.slid.es/images/alphabet/v1/a.png" data-preview-image data-preview-fit="contain">-->
-                            <!--</figure>-->
-                        <!--</div>-->
-
-                        <!--<div style="width: 1px; height: 20vh; margin: 0 3rem;background-color: #222;"></div>-->
-
-                        <!--<div class="r-vstack items-start">-->
-                            <!--<h5>Videos</h5>-->
-                            <!--<figure>-->
-                                <!--<video height="100" src="https://static.slid.es/site/homepage/v1/homepage-video-editor.mp4" data-preview-video></video>-->
-                            <!--</figure>-->
-                        <!--</div>-->
-
-                        <!--<div style="width: 1px; height: 20vh; margin: 0 3rem;background-color: #222;"></div>-->
-
-                        <!--<div class="r-vstack items-start">-->
-                            <!--<h5>Iframes</h5>-->
-                            <!--<a style="font-size: 28px;" data-preview-link href="https://hakim.se">https://hakim.se</a>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-                <!--</section>-->
+                    <iframe id="demo1" height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html" scrolling="no"></iframe>
+                </section>
 
                 <section>
-                    <h2>p5js demo!!</h2>
+                    <h2>Effect of a forcing term</h2>
 
-                    <iframe height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html"></iframe>
+                    <iframe id="demo2" height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html" scrolling="no"></iframe>
                 </section>
 
             </div>
 
         </div>
 
-        <script src="node_modules/reveal.js/dist/reveal.js"></script>
-        <script src="node_modules/reveal.js/plugin/notes/notes.js"></script>
-		<script src="node_modules/reveal.js/plugin/markdown/markdown.js"></script>
-		<script src="node_modules/reveal.js/plugin/highlight/highlight.js"></script>
-		<script src="node_modules/reveal.js/plugin/zoom/zoom.js"></script>
+        <script src="reveal.js/dist/reveal.js"></script>
+        <script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
         <script>
             Reveal.initialize({
                 previewLinks: false,
@@ -159,6 +71,32 @@
                 slideNumber: "c/t",
                 plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes ]
             });
+
+            const iframeDemo2 = document.getElementById("demo2");
+            iframeDemo2.onload = function() {
+                iframeDemo2.contentWindow.postMessage({
+                    "action": "setPause",
+                    "value": true
+                });
+                iframeDemo2.contentWindow.postMessage({
+                    "action": "setGoal",
+                    "xvalue": -0.1,
+                    "yvalue": 0
+                });
+                iframeDemo2.contentWindow.postMessage({
+                    "action": "setCriticallyDamped",
+                    "value": true
+                });
+                iframeDemo2.contentWindow.postMessage({
+                    "action": "setAz",
+                    "value": 30
+                });
+                iframeDemo2.contentWindow.postMessage({
+                    "action": "setForcingTerm",
+                    "value": "sinusoid"
+                });
+            };
+
         </script>
 
     </body>

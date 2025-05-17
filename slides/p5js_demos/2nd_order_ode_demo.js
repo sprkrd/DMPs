@@ -1,19 +1,30 @@
-let W = 800;
-let H = 600;
+const W = 800;
+const H = 600;
 
-let oscilloscopeW = 250;
-let oscilloscopeH = Math.round(oscilloscopeW / 1.62);
+const oscilloscopeW = 250;
+const oscilloscopeH = Math.round(oscilloscopeW / 1.62);
 
-let markerSize = 30;
+const markerSize = 30;
 
-let worldToCanvasScale = 600;
-let canvasToWorldScale = 1./worldToCanvasScale;
+const worldToCanvasScale = 600;
+const canvasToWorldScale = 1./worldToCanvasScale;
+
+const defaults = {
+    az: 10,
+    bz: 10/4,
+    forcingTerm: "none",
+    criticallyDamped: false,
+    pause: false,
+    goal_x: undefined,
+    goal_y: undefined,
+};
 
 let controlPanel;
 let sliderAz;
 let sliderBz;
 let checkboxCriticallyDamped;
 let checkboxPause;
+let forcingTermSelect;
 
 let state;
 
@@ -23,10 +34,17 @@ let oscilloscopeY;
 function setup() {
     createCanvas(W, H);
 
+    let g = undefined;
+    if (defaults.goal_x !== undefined && defaults.goal_y !== undefined)
+    {
+        g = createVector(defaults.goal_x, defaults.goal_y);
+    }
+
     state = {
+        t: 0,
         pos: createVector(0,0),
         vel: createVector(0,0),
-        g: undefined,
+        g: g,
     };
 
     controlPanel = createDiv('');
@@ -40,20 +58,28 @@ function setup() {
     controlPanel.style('color', 'white');
     //controlPanel.draggable();
 
-    sliderAz = createSlider(0, 50, 10);
+    sliderAz = createSlider(0, 50, defaults.az);
     sliderAz.parent(controlPanel);
     sliderAz.changed(sliderAzCallback);
-    createSpan("Az").parent(controlPanel);
+    createSpan("&alpha;<sub>z</sub>").parent(controlPanel);
 
-    sliderBz = createSlider(0, 50, 10/4);
+    sliderBz = createSlider(0, 50, defaults.bz);
     sliderBz.parent(controlPanel);
-    createSpan("Bz").parent(controlPanel);
+    createSpan("&beta;<sub>z</sub>").parent(controlPanel);
 
-    checkboxCriticallyDamped = createCheckbox("Crit. damped", false);
+    forcingTermSelect = createSelect()
+    forcingTermSelect.parent(controlPanel);
+    forcingTermSelect.option("No forcing term", "none");
+    forcingTermSelect.option("Sinusoid", "sinusoid");
+    forcingTermSelect.option("Vanishing sinusoid", "vanishing");
+    forcingTermSelect.selected(defaults.forcingTerm);
+    forcingTermSelect.changed(resetTime);
+
+    checkboxCriticallyDamped = createCheckbox("Crit. damped", defaults.criticallyDamped);
     checkboxCriticallyDamped.parent(controlPanel);
     checkboxCriticallyDamped.changed(enableOrDisableCriticallyDamped);
 
-    checkboxPause = createCheckbox("Pause", false);
+    checkboxPause = createCheckbox("Pause", defaults.pause);
     checkboxPause.parent(controlPanel);
 
     enableOrDisableCriticallyDamped();
@@ -67,6 +93,7 @@ function setup() {
         dt: 1.0 / getTargetFrameRate(),
         T: 2.0,
         A: 1.5,
+        title: "x",
     });
 
     oscilloscopeY = new Oscilloscope({
@@ -77,7 +104,12 @@ function setup() {
         dt: 1.0 / getTargetFrameRate(),
         T: 2.0,
         A: 1.0,
+        title: "y",
     });
+}
+
+function resetTime() {
+    state.t = 0;
 }
 
 function enableOrDisableCriticallyDamped() {
@@ -133,11 +165,26 @@ function drawCross(x, y, size) {
     line(x-size/2, y+size/2, x+size/2, y-size/2);
 }
 
+function forcingTerm(vanishingFactor) {
+    let t = state.t;
+    let fade = exp(-vanishingFactor*t);
+    let fx = -TWO_PI*TWO_PI*cos(TWO_PI*t)*fade;
+    let fy = TWO_PI*TWO_PI*sin(TWO_PI*t)*fade;
+    return createVector(fx, fy);
+}
+
 function update(dt) {
     let P = sliderAz.value()*sliderBz.value();
     let D = sliderAz.value();
     
     let ddy = p5.Vector.mult(state.vel, -D);
+
+    if (forcingTermSelect.selected() === "sinusoid") {
+        ddy.add(forcingTerm(0));
+    }
+    else if (forcingTermSelect.selected() === "vanishing") {
+        ddy.add(forcingTerm(1));
+    }
 
     if (state.g !== undefined) {
         let err = p5.Vector.sub(state.g, state.pos);
@@ -145,12 +192,16 @@ function update(dt) {
         ddy = p5.Vector.add(ddy, p5.Vector.mult(err, P));
     }
 
+    state.t += dt;
     state.vel.add(p5.Vector.mult(ddy, dt));
     state.pos.add(p5.Vector.mult(state.vel, dt));
 }
 
 function doubleClicked() {
     state.g = canvasToWorldCoords(mouseX, mouseY);
+    if (forcingTermSelect.selected() === "vanishing") {
+        resetTime();
+    }
     oscilloscopeX.add_horizontal_ruler(state.g.x, "red");
     oscilloscopeY.add_horizontal_ruler(state.g.y, "red");
 }
@@ -161,6 +212,30 @@ function keyReleased() {
         checkboxPause.checked(!currentValue);
     }
 }
+
+window.addEventListener("message", function(event) {
+    let data = event.data;
+    if (data.action === "setPause") {
+        checkboxPause.checked(data.value);
+    }
+    else if (data.action === "setAz") {
+        sliderAz.value(data.value);
+        sliderAzCallback();
+    }
+    else if (data.action === "setBz") {
+        sliderBz.value(data.value);
+    }
+    else if (data.action === "setForcingTerm") {
+        forcingTermSelect.selected(data.value);
+    }
+    else if (data.action === "setCriticallyDamped") {
+        checkboxCriticallyDamped.checked(data.value);
+        enableOrDisableCriticallyDamped();
+    }
+    else if (data.action === "setGoal") {
+        state.g = createVector(data.xvalue, data.yvalue);
+    }
+});
 
 function draw() {
     background("black");
