@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pygame
 import json
 import os
@@ -38,7 +40,6 @@ def draw_text(text, pos):
 running = True
 replaying = False
 replay_index = 0
-replay_timer = 0
 replay_drawn = []
 
 while running:
@@ -49,13 +50,13 @@ while running:
         pygame.draw.lines(screen, DRAW_COLOR, False, points, 2)
     
     if replaying:
-        if  trajectory:
-            replay_index += 1
+        if trajectory:
             if replay_index < len(trajectory):
                 replay_drawn.append(trajectory[replay_index])
             else:
                 print("done")
                 replaying = False
+            replay_index += 1
         else:
             draw_text("No trajectory to replay", (10, 10))
             replaying = False
@@ -100,7 +101,6 @@ while running:
                     trajectory = loaded
                     replaying = True
                     replay_index = 0
-                    replay_timer = 0
                     replay_drawn = [trajectory[0]]  # start with the first point
                     print("Replaying trajectory...")
                 else:

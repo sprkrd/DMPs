@@ -17,13 +17,16 @@ class CanonicalSystem:
     def convert_to_t(self, x, tau=1.):
         return -tau/self.ax * np.log(x)
 
-    def timesteps(self, tau=1.):
-        T = self.run_time * tau
-        t = np.arange(int(T/self.dt)+1)*self.dt
+    def timesteps(self, tau=1., length=None):
+        if length is None:
+            T = self.run_time * tau
+            t = np.arange(int(T/self.dt)+1)*self.dt
+        else:
+            t = np.arange(length)*self.dt
         return t
 
-    def rollout(self, tau=1.):
-        t = self.timesteps(tau)
+    def rollout(self, tau=1., length=None):
+        t = self.timesteps(tau, length)
         return t, self.convert_to_x(t, tau)
 
 

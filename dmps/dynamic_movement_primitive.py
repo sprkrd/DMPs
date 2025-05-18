@@ -36,7 +36,7 @@ class DynamicMovementPrimitive:
         self.bfs_h = - 1./(2*sigma**2)
 
     def _gen_weights(self, ftarget):
-        timesteps, x = self.cs.rollout()
+        timesteps, x = self.cs.rollout(length=ftarget.shape[0])
         psi = self.gen_psi(x)
         xpsi = (x*psi.T).T
         self.w = np.zeros((self.n_bfs, self.n_dmps))
@@ -47,7 +47,7 @@ class DynamicMovementPrimitive:
                 den = np.sum(x*xpsi[:,b])
                 self.w[b,i] = num/den
                 if scale > 1e-6:
-                    w[b,i] /= scale
+                    self.w[b,i] /= scale
 
 
     def _prepare_trajectory(self, y, dt):
@@ -56,7 +56,7 @@ class DynamicMovementPrimitive:
             y = y.reshape((len(y), 1))
         else:
             assert len(y.shape) == 2 and y.shape[1] == self.n_dmps
-        timesteps = self.cs.timesteps()
+        timesteps = self.cs.timesteps(length=y.shape[0])
         if np.abs(dt - self.cs.dt) > 1e-12:
             t = np.arange(len(y))*dt
             path = np.zeros((len(timesteps), self.n_dmps))
