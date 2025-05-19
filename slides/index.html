@@ -57,6 +57,15 @@
                         <img src="img/robot-ping-pong.webp">
                         <figcaption>Credit: <a href="www.newscientist.com">www.newscientist.com</a></figcaption>
                     </figure>
+					
+					<aside class="notes">
+					<ul>
+						<li>Linguistic intelligence, object recognition vs. physical intelligence</li>
+						<li>First L&L about robotics!</li>
+						<li>(click) Offer ping pong example</li>
+					</ul>
+						
+					</aside>
 
                 </section>
 
@@ -92,10 +101,18 @@
 
                         </div>
                     </div>
+					
+					<aside class="notes">
+					<ul>
+						<li>(click) (A) frog, leg fixed in place (B) measure forces; (C) interpolation grid; (D) interpolated forces</li>
+						<li>(click) different fields produced by estimulating the spinal cord (B) and (D) convergent, (C) parallel</li>
+						<li>(click) again different fields produced by estimulating different areas</li>
+						<li>(click) (A) and (B) simple fields, (C) mathematically adding them, (D) estimulating the two areas simultaneously</li>
+					</ul>
                 </section>
 
                 <section>
-                    <h2>Introduction to DMPs</h2>
+                    <h2>Enter DMPs</h2>
 
                     <ul>
                         <li>Mathematical framework for imitating trajectories</li>
@@ -103,6 +120,11 @@
                         <li class="fragment">Discrete and rhythmic (we <strong>focus on discrete</strong>)</li>
                         <li class="fragment">Warning! Only kinematics, no control</li>
                     </ul>
+					
+					<aside class="notes">
+					<ul>
+						<li>Trajectory planning is guided by hypothetical forces that act on the end effector</li>
+					</ul>
 
                 </section>
 
@@ -124,9 +146,16 @@
                                     <li class="fragment" data-fragment-index="3">$ \alpha_z $ and $ \beta_z $ are parameters that govern the attractor behavior</li>
                                     <li class="fragment" data-fragment-index="4">$ \tau $ is used to control the speed of the trajectory</li>
                                     <li class="fragment" data-fragment-index="5">$ f $ is the forcing term</li>
+                                    <li class="fragment" data-fragment-index="6">$ g $ is an attractor</li>
                                 </ul>
                             </div>
                         </div>
+						
+						<aside class="notes">
+							<ul>
+								<li>One per DOF/coordinate!</li>
+							</ul>
+						</aside>
                     </section>
 
                     <section>
@@ -134,10 +163,10 @@
 
                         Remind you of anything?
 
-                        <div class="fragment">
+                        <div class="fragment" data-fragment-index="1">
                             <p>Consider:</p>
                             <ul>
-                                <li class="fragment">$ \tau = 1 $</li>
+                                <li class="fragment" data-fragment-index="1">$ \tau = 1 $</li>
                                 <li class="fragment">$ P = \alpha_z \beta_z $</li>
                                 <li class="fragment">$ D = \alpha_z $</li>
                                 <li class="fragment">$ f = 0 $</li>
@@ -242,6 +271,13 @@
                                 <figcaption>Ijspeert, Nakanishi, Hoffman, Pastor, and Schaal (2013)</figcaption>
                             </figure>
                         </div>
+						
+						<aside class="notes">
+					<ul>
+						<li>time-agnostic recoding of time</li>
+						<li>exponential relaxation</li>
+						<li>useful for coordination</li>
+					</ul>
 
                     </div>
 
@@ -308,6 +344,13 @@
 
                     <img class="r-stretch" src="img/dmp_evolution.png">
                     <p class="caption">Ijspeert, Nakanishi, Hoffman, Pastor, and Schaal (2013)</p>
+					
+					<aside class="notes">
+					<ul>
+						<li>2D trajectory</li>
+						<li>evolution of vector field as x decreases</li>
+						<li>The attractor changes to induce a trajectory, by the end is in the goal</li>
+					</ul>
                 </section>
 
                 <section>
@@ -316,11 +359,11 @@
                         <ul>
                             <li>Not very different. Achieved by...</li>
                             <li class="fragment">... periodic phase</li>
-                            <li class="fragment">... linear phase and periodic basis function (Von-Mises)</li>
+                            <li class="fragment">... or linear phase and periodic basis function (Von-Mises)</li>
                             <li class="fragment">Example of usage: gait generation</li>
                         </ul>
 
-                        <iframe width="420" height="340" src="https://www.youtube.com/embed/I44_zbEwz_w?autoplay=1&mute=1">
+                        <iframe width="420" height="340" src="https://www.youtube.com/embed/I44_zbEwz_w?mute=1">
 
                         </iframe>
                     </div>
@@ -337,9 +380,9 @@
                 </section>
 
                 <section>
-                    <h2>Example #1: kinestetic teaching (I)</h2>
+                    <h2>Example #1: kinestetic teaching</h2>
 
-                    <iframe class="r-stretch" src="https://www.youtube.com/embed/Ge0GduY1rtE?autoplay=1&mute=1&start=20">
+                    <iframe class="r-stretch" src="https://www.youtube.com/embed/Ge0GduY1rtE?mute=1&start=20">
                     </iframe>
 
                 </section>
@@ -347,14 +390,14 @@
                 <section>
                     <h2>Example #2: kinestetic and mocap</h2>
 
-                    <iframe class="r-stretch" src="https://www.youtube.com/embed/XWSLAW7zCo4?autoplay=1&mute=1&start=42">
+                    <iframe class="r-stretch" src="https://www.youtube.com/embed/XWSLAW7zCo4?mute=1&start=42">
                     </iframe>
 
                 </section>
 
                 <section>
                     <h2>Example #3: teaching in VR</h2>
-                    <iframe class="r-stretch" src="https://www.youtube.com/embed/uGYwbHrDyIQ?autoplay=1&mute=1">
+                    <iframe class="r-stretch" src="https://www.youtube.com/embed/uGYwbHrDyIQ?mute=1">
                     </iframe>
                 </section>
 
@@ -412,6 +455,7 @@
                 height: 1080,
                 slideNumber: "c/t",
                 hash: true,
+				autoPlayMedia: true,
                 plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
             });
 
