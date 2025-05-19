@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# Inspired by the examples provided by the Box2D Python binding. Simple Airhockey
+# setup
+
 from Box2D.examples.framework import (Framework, Keys, main)
 from Box2D import (b2CircleShape, b2FixtureDef, b2ChainShape, b2PolygonShape,
                    b2RevoluteJointDef, b2_pi, b2Vec2)
@@ -12,6 +15,10 @@ from dmps.dynamic_movement_primitive import DynamicMovementPrimitive
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+
+
+TRAJECTORY_FILE = "trajectory_airhockey.json"
+
 
 class Airhockey(Framework):
     name = "Airhockey"
@@ -94,7 +101,8 @@ class Airhockey(Framework):
             bullet=True,
             linearDamping=0,
             angularDamping=5,
-            position=(-l/4, w/4))
+            # position=(-l/4, w/4))
+            position=(0,0))
 
     def Keyboard(self, key):
         if key == Keys.K_a:
@@ -103,7 +111,7 @@ class Airhockey(Framework):
     def LoadTrajectory(self):
         if self.recorded_trajectory is None:
             try:
-                with open("recorded_trajectory.json", "r") as f:
+                with open(TRAJECTORY_FILE, "r") as f:
                     self.recorded_trajectory = json.load(f)
             except FileNotFoundError:
                 print("trajectory file not found, create a trajectory first")
@@ -119,6 +127,15 @@ class Airhockey(Framework):
         self.dmp = dmp
         return True
 
+    def EnableDMP(self):
+        if self.dmp is None:
+            if not self.FitDMP():
+                print("Could not fit DMP")
+                return
+        self.reproducing_dmp = True
+        self.dmp_x = 1.0
+        self.dmp_y0 = np.asarray(self.mallet.worldCenter)
+
     def KeyboardUp(self, key):
         if key == Keys.K_a:
             self.pressed = False
@@ -127,7 +144,7 @@ class Airhockey(Framework):
         elif key == Keys.K_s:
             if self.recording:
                 print("Stop recording")
-                with open("recorded_trajectory.json", "w") as f:
+                with open(TRAJECTORY_FILE, "w") as f:
                     json.dump(self.recorded_trajectory, f, indent=4)
                 self.recording = False
             else:
@@ -149,21 +166,20 @@ class Airhockey(Framework):
                 self.reproduction_timestep = 0
                 self.reproduction_length = len(self.recorded_trajectory["position_x"])
         elif key == Keys.K_d:
-            if self.dmp is None:
-                if not self.FitDMP():
-                    print("Could not fit DMP")
-                    return
-            self.reproducing_dmp = True
-            self.dmp_x = 1.0
-            self.dmp_y0 = np.asarray(self.mallet.worldCenter)
+            self.EnableDMP()
         elif key == Keys.K_t:
             self.tracking = not self.tracking
+        elif key == Keys.K_v:
+            w = Airhockey.scale_factor * Airhockey.table_width
+            l = Airhockey.scale_factor * Airhockey.table_length
+            self.ResetStatus(puck_position=(l*5/16, -9), puck_vel=(-15, 6))
+            self.EnableDMP()
 
-    def ResetStatus(self):
+    def ResetStatus(self, puck_position=None, puck_vel=None):
         w = Airhockey.scale_factor * Airhockey.table_width
         l = Airhockey.scale_factor * Airhockey.table_length
-        self.puck.linearVelocity = (0,0)
-        self.puck.position = (-l/4, w/4)
+        self.puck.linearVelocity = puck_vel or (0,0)
+        self.puck.position = puck_position or (0,0) #(-l/4, w/4)
         self.mallet.linearVelocity = (0,0)
         if self.mouseWorld:
             self.mallet.position = self.mouseWorld
@@ -197,19 +213,22 @@ class Airhockey(Framework):
                     np.asarray(self.mallet.linearVelocity),
                     self.dmp_y0,
                     np.asarray(self.puck.worldCenter),
-                    self.dmp_x
+                    self.dmp_x,
+                    tau=0.5
             )
             self.dmp_x = x
             # target = y
             # self.mallet.position = y
             # self.mallet.linearVelocity = dy
-            self.mallet.ApplyForceToCenter(ddy*self.mallet.mass, True)
             t = self.dmp.cs.convert_to_t(x)
             T = self.DurationRecordedTrajectory()
             if t > T:
                 print("finished")
                 self.mallet.linearVelocity = (0,0)
                 self.reproducing_dmp = False
+            else:
+                self.mallet.ApplyForceToCenter(ddy*self.mallet.mass, True)
+
         elif self.mouseWorld and self.tracking:
             target = self.mouseWorld
             
@@ -234,7 +253,6 @@ class Airhockey(Framework):
             self.recorded_trajectory["acceleration_x"].append(inv_dt*(malletVel[0]-prevVelX))
             self.recorded_trajectory["acceleration_y"].append(inv_dt*(malletVel[1]-prevVelY))
             
-
         super().Step(settings)
 
 if __name__ == "__main__":

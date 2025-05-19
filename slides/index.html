@@ -4,27 +4,33 @@
     <head>
         <meta charset="utf-8">
 
-        <title>Dynamic Movement Primitives - Lunch and Learn</title>
+        <title>Dynamical Movement Primitives - Lunch and Learn</title>
 
         <link rel="stylesheet" href="reveal.js/dist/reveal.css">
         <link rel="stylesheet" href="reveal.js/dist/theme/black.css" id="theme">
 
-        <!-- <style> -->
-            <!-- .reveal { -->
-                <!-- font-size: 24px; -->
-            <!-- } -->
-            <!-- .reveal figure { -->
-                <!-- margin: 0 0 1rem 0; -->
-                <!-- text-align: left; -->
-            <!-- } -->
-            <!-- .reveal figure img, -->
-            <!-- .reveal figure video { -->
-                <!-- margin: 0.25rem 0 0 0; -->
-            <!-- } -->
-            <!-- figcaption, a { -->
-                <!-- font-size: 16px; -->
-            <!-- } -->
-        <!-- </style> -->
+         <style>
+            .reveal figcaption, .reveal .caption {
+                font-size: 24px;
+                margin-top: -24px;
+            }
+            /*
+             .reveal { 
+                 font-size: 24px; 
+             } 
+             .reveal figure { 
+                 margin: 0 0 1rem 0; 
+                 text-align: left; 
+             } 
+             .reveal figure img, 
+             .reveal figure video { 
+                 margin: 0.25rem 0 0 0; 
+             } 
+             figcaption, a { 
+                 font-size: 16px; 
+             }
+             */
+         </style> 
     </head>
 
     <body>
@@ -34,24 +40,359 @@
             <div class="slides">
             
                 <section>
-                    <h1>Dynamic Movement Primitives</h1>
+                    <h1>Dynamical Movement Primitives</h1>
                     
-                    <p>Lunch and Learn - 2025/May/12</p>
+                    <p><strong>Lunch and Learn - 2025/May/19</strong></p>
                     
-                    <p>&#128100 Alejandro Suarez Hernandez</p>
+                    <p>&#x1F986; <em>Alejandro Suárez Hernández</em></p>
                     
                 </section>
 
                 <section>
-                    <h2>2nd Order ODE behavior</h2>
+                    <h2>Motivation</h2>
 
-                    <iframe id="demo1" height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html" scrolling="no"></iframe>
+                    <p>Learn complex trajectories in an adaptable way</p>
+
+                    <figure class="fragment">
+                        <img src="img/robot-ping-pong.webp">
+                        <figcaption>Credit: <a href="www.newscientist.com">www.newscientist.com</a></figcaption>
+                    </figure>
+
                 </section>
 
                 <section>
-                    <h2>Effect of a forcing term</h2>
+                    <h2>Biological inspiration</h2>
 
-                    <iframe id="demo2" height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html" scrolling="no"></iframe>
+                    <div class="r-hstack">
+
+                        <ul>
+                            <li>Simple motion templates lead to complex motions</li>
+                            <li>Central Pattern Generator generate coordination signal</li>
+                            <li class="fragment" data-fragment-index="5">Not entirely accurate!</li>
+                        </ul>
+
+                        <div class="r-stack">
+
+                            <figure class="fragment fade-in-then-out" data-fragment-index="1">
+                                <img src="img/frog1.png">
+                                <figcaption>Bizzi, Mussa-Ivaldi, and Giszter (1991)</figcaption>
+                            </figure>
+                            <figure class="fragment fade-in-then-out" data-fragment-index="2">
+                                <img src="img/frog2.png">
+                                <figcaption>Bizzi, Mussa-Ivaldi, and Giszter (1991)</figcaption>
+                            </figure>
+                            <figure class="fragment fade-in-then-out" data-fragment-index="3">
+                                <img src="img/frog3.png">
+                                <figcaption>Bizzi, Mussa-Ivaldi, and Giszter (1991)</figcaption>
+                            </figure>
+                            <figure class="fragment" data-fragment-index="4">
+                                <img src="img/frog4.png">
+                                <figcaption>Bizzi, Mussa-Ivaldi, and Giszter (1991)</figcaption>
+                            </figure>
+
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Introduction to DMPs</h2>
+
+                    <ul>
+                        <li>Mathematical framework for imitating trajectories</li>
+                        <li class="fragment">Conceived by Ijkspeert and colleagues between 2003 and 2013</li>
+                        <li class="fragment">Discrete and rhythmic (we <strong>focus on discrete</strong>)</li>
+                        <li class="fragment">Warning! Only kinematics, no control</li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Core idea</h2>
+                        <div class="r-hstack items-start">
+                            <div>
+                                \[ \tau \ddot{y} = \alpha_z (\beta_z (g - y) - \tau \dot{y}) + f) \]
+                                <p class="caption">Harmonic oscillator</p>
+                                
+                                <p class="fragment" data-fragment-index="10">For $ \alpha_z = 4 \beta_z $ the system is critically damped</p>
+                            </div>
+                            <div>
+                                <p>where</p>
+                                <ul>
+                                    <li class="fragment" data-fragment-index="1">$ y $ is the state variable (position)</li>
+                                    <li class="fragment" data-fragment-index="2">$ \dot{y} $ and $ \ddot{y} $ are velocity and acceleration, respectively</li>
+                                    <li class="fragment" data-fragment-index="3">$ \alpha_z $ and $ \beta_z $ are parameters that govern the attractor behavior</li>
+                                    <li class="fragment" data-fragment-index="4">$ \tau $ is used to control the speed of the trajectory</li>
+                                    <li class="fragment" data-fragment-index="5">$ f $ is the forcing term</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        \[ \tau \ddot{y} = \alpha_z (\beta_z (g - y) - \tau \dot{y}) + f) \]
+
+                        Remind you of anything?
+
+                        <div class="fragment">
+                            <p>Consider:</p>
+                            <ul>
+                                <li class="fragment">$ \tau = 1 $</li>
+                                <li class="fragment">$ P = \alpha_z \beta_z $</li>
+                                <li class="fragment">$ D = \alpha_z $</li>
+                                <li class="fragment">$ f = 0 $</li>
+                            </ul>
+                            <div class="fragment">
+                                <p>Maybe now?</p>
+                                \[ \ddot{y} = P (g - y) - D \dot{y} \]
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <p class="caption">Demo of attractor behavior (2 DMPs, $ f = 0 $)</p>
+                        <iframe id="demo1" height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html" scrolling="no"></iframe>
+                    </section>
+
+                    <section>
+                        <h2>What about the forcing term?</h2>
+                        
+                        <p>$ f \neq 0 $ allows interesting trajectories</p>
+
+                        <figure class="fragment">
+                            <img src="img/forcing_term_example.png">
+                            <figcaption>For example, in 2D sinusoidal forcing terms with a 90 deg phase shift</figcaption>
+                        </figure>
+                    </section>
+
+                    <section>
+                        <p>Sinusoidal forcing terms:</p>
+                        <iframe id="demo2" height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html" scrolling="no"></iframe>
+                    </section>
+
+                    <section>
+                        <h2>Vanishing forcing terms</h2>
+
+                        <p>$ f \rightarrow 0 $ as $ t \rightarrow \infty $ to guarantee convergence</p>
+
+                        <figure class="fragment">
+                            <img src="img/vanishing_forcing_term_example.png">
+                            <figcaption>For example, vanishing sinusoids</figcaption>
+                        </figure>
+
+                    </section>
+
+                    <section>
+                        <p>Vanishing sinusoidal forcing terms:</p>
+                        <iframe id="demo3" height="600" width="800" data-src="./p5js_demos/2nd_order_ode_demo.html" scrolling="no"></iframe>
+                    </section>
+ 
+                </section>
+
+                <section>
+                    <h2>Adjustable forcing term (first version)</h2>
+
+                    <div class="r-hstack items-start">
+
+                        <div>
+                            \[ f(t) = \frac{\sum_i^N \Psi_i(t) w_i}{\sum_i^N \Psi_i(t) } \]
+
+                            <p>Each $ \Psi_i $ is a basis function (e.g. Gaussian):</p>
+                        </div>
+
+                        <figure class="fragment">
+                            <img src="img/bfs_t.png">
+                            <figcaption>E.g. 20 Gaussian basis functions ( $ N = 20 $)</figcaption>
+                        </figure>
+
+                    </div>
+
+                </section>
+
+                <section>
+                    <h2>The canonical system</h2>
+
+                    <div class="r-hstack items-start">
+
+                        <div>
+                            <p>"Recoding" of time into phase variable x</p>
+
+                            \[ x = e^{-\frac{\alpha_x}{\tau} t} \]
+
+                            <p>Why?</p>
+                            <ul>
+                                <li class="fragment" data-fragment-index="1">Time: $ 0 \rightarrow T $ (trajectory duration), phase: $ 1 \rightarrow 0 $</li>
+                                <li class="fragment" data-fragment-index="3">Provides DOFs coordination</li>
+                            </ul>
+                        </div>
+
+                        <div class="r-stack">
+                            <figure class="fragment fade-in-then-out" data-fragment-index="1">
+                                <img src="img/canonical_system.png">
+                                <figcaption>Time w.r.t. x and x w.r.t. time</figcaption>
+                            </figure>
+
+                            <figure class="fragment fade-in-then-out" data-fragment-index="2">
+                                <img src="img/bfs_x.png">
+                                <figcaption>E.g. 20 Gaussian basis functions w.r.t. phase $ x $</figcaption>
+                            </figure>
+                            
+                            <figure class="fragment" data-fragment-index="3">
+                                <img src="img/multidof.png">
+                                <figcaption>Ijspeert, Nakanishi, Hoffman, Pastor, and Schaal (2013)</figcaption>
+                            </figure>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section>
+                    <h2>Adjustable forcing term (second version)</h2>
+
+                    \[ f(x) = \frac{\sum_i^N \Psi_i(x) w_i}{\sum_i^N \Psi_i(x) } x ( g - y_0 ) \]
+
+                    <p>What's different?</p>
+                    <ul>
+                        <li class="fragment">Depends on phase</li>
+                        <li class="fragment">Vanishes as $ x \rightarrow 0 $</li>
+                        <li class="fragment">Scaled by $ (g - y_0) $</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>How do we learn the parameters?</h2>
+
+                        <ul>
+                            <li>Assume demonstration $y_\text{demo}$, $\dot{y}_\text{demo}$, $\ddot{y}_\text{demo}$ with $ P $ data points</li>
+                            <li class="fragment">Calculate \[ f_\text{target} = \tau^2 \ddot{y}_\text{demo} - \alpha_z(\beta_z(g-y_\text{demo}) - \tau \dot{y}_\text{demo}) \]</li>
+                            <li class="fragment">Minimize weighted local regression loss function \[ J_i = \sum_{t=i}^P \Psi_i(x(t))(f_\text{target}(t) - w_i \xi(t)), \] where
+                            $\xi(t) = x(t)(g - y_0)$</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        Turns out there's analytical solution!
+
+                        \[ w_i = \frac{\boldsymbol{s}^T \Gamma_i \boldsymbol{f}_\text{target}}{\boldsymbol{s}^T \Gamma_i \boldsymbol{s}}, \]
+
+                        where
+
+                        \[ \boldsymbol{s} = \begin{pmatrix}
+                        \xi(1)\\
+                        \xi(2)\\
+                        \dotsc\\
+                        \xi(P)
+                        \end{pmatrix} \quad
+
+                        \Gamma_i = \begin{pmatrix}
+                        \Psi_i(x(1)) &              &        & 0           \\
+                                     & \Psi_i(x(2)) &        &             \\
+                                     &              & \dotsc &             \\
+                        0            &              &        & \Psi_i(x(P))
+                        \end{pmatrix} \quad
+
+                        \boldsymbol{f}_\text{target} = \begin{pmatrix}
+                        f_\text{target}(1)\\
+                        f_\text{target}(2)\\
+                        \dotsc\\
+                        f_\text{target}(P)\\
+                        \end{pmatrix} \]
+                    </section>
+
+                </section>
+
+                <section>
+                    <h2>Evolution of "force field"</h2>
+
+                    <img class="r-stretch" src="img/dmp_evolution.png">
+                    <p class="caption">Ijspeert, Nakanishi, Hoffman, Pastor, and Schaal (2013)</p>
+                </section>
+
+                <section>
+                    <h2>About rhytmic DMPs</h2>
+                    <div class="r-hstack items-start">
+                        <ul>
+                            <li>Not very different. Achieved by...</li>
+                            <li class="fragment">... periodic phase</li>
+                            <li class="fragment">... linear phase and periodic basis function (Von-Mises)</li>
+                            <li class="fragment">Example of usage: gait generation</li>
+                        </ul>
+
+                        <iframe width="420" height="340" src="https://www.youtube.com/embed/I44_zbEwz_w?autoplay=1&mute=1">
+
+                        </iframe>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Demonstration #1: drawing</h2>
+                    <img class="r-stretch" src="img/blackboard.png">
+                </section>
+
+                <section>
+                    <h2>Demonstration #2: airhockey</h2>
+                    <img class="r-stretch" src="img/airhockey.png">
+                </section>
+
+                <section>
+                    <h2>Example #1: kinestetic teaching (I)</h2>
+
+                    <iframe class="r-stretch" src="https://www.youtube.com/embed/Ge0GduY1rtE?autoplay=1&mute=1&start=20">
+                    </iframe>
+
+                </section>
+
+                <section>
+                    <h2>Example #2: kinestetic and mocap</h2>
+
+                    <iframe class="r-stretch" src="https://www.youtube.com/embed/XWSLAW7zCo4?autoplay=1&mute=1&start=42">
+                    </iframe>
+
+                </section>
+
+                <section>
+                    <h2>Example #3: teaching in VR</h2>
+                    <iframe class="r-stretch" src="https://www.youtube.com/embed/uGYwbHrDyIQ?autoplay=1&mute=1">
+                    </iframe>
+                </section>
+
+                <section>
+                    <h2>Some practical considerations</h2>
+                    <ul>
+                        <li>Allows obstacle avoidance and error coupling</li>
+                        <li>Usable in joint and cartesian space</li>
+                        <li>Special care when $ g = y0 $</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Conclusions</h2>
+                    <div class="r-hstack items-start">
+                        <ul>
+                            <li class="fragment">One-shot learning of trajectories (both + and -)</li>
+                            <li class="fragment">Can learn both rhythmic and discrete patterns</li>
+                            <li class="fragment">ONLY kinematics!!</li>
+                            <li class="fragment">Very nice adaptability (scale and temporal).</li>
+                            <li class="fragment">Supports moving targets!</li>
+                            <li class="fragment">Learns movement styles, trajectories converges into a target</li>
+                        </ul>
+
+                        <figure>
+                            <img src="img/airhockey_real.png">
+                            <figcaption>Credit: <a href="https://air-hockey-challenge.robot-learning.net/">https://air-hockey-challenge.robot-learning.net/</a></figcaption>
+                        </figure>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>References</h2>
+                    <ul>
+                        <li><a href="https://www.youtube.com/watch?v=IV8Eze9Hxrc">DMP presentation by Gregor Schöner</a></li>
+                        <li><a href="https://web.archive.org/web/20240414203731/https://viterbik12.usc.edu/wp-content/uploads/2017/06/Dynamical-Movement-Primitives_-Learning-Attractor-Models-for-Motor-Behaviors.pdf">2013 paper by Ijspeert <em>et al.</em></a></li>
+                        <li><a href="https://studywolf.wordpress.com/2013/11/16/dynamic-movement-primitives-part-1-the-basics/">Travis DeWolf's blog</a></li>
+                    </ul>
                 </section>
 
             </div>
@@ -63,13 +404,15 @@
 		<script src="reveal.js/plugin/markdown/markdown.js"></script>
 		<script src="reveal.js/plugin/highlight/highlight.js"></script>
 		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+        <script src="reveal.js/plugin/math/math.js"></script>
         <script>
             Reveal.initialize({
                 previewLinks: false,
-                width: 1280,
-                height: 720,
+                width: 1920,
+                height: 1080,
                 slideNumber: "c/t",
-                plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes ]
+                hash: true,
+                plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
             });
 
             const iframeDemo2 = document.getElementById("demo2");
@@ -94,6 +437,31 @@
                 iframeDemo2.contentWindow.postMessage({
                     "action": "setForcingTerm",
                     "value": "sinusoid"
+                });
+            };
+
+            const iframeDemo3 = document.getElementById("demo3");
+            iframeDemo3.onload = function() {
+                iframeDemo3.contentWindow.postMessage({
+                    "action": "setPause",
+                    "value": true
+                });
+                iframeDemo3.contentWindow.postMessage({
+                    "action": "setGoal",
+                    "xvalue": -0.1,
+                    "yvalue": 0
+                });
+                iframeDemo3.contentWindow.postMessage({
+                    "action": "setCriticallyDamped",
+                    "value": true
+                });
+                iframeDemo3.contentWindow.postMessage({
+                    "action": "setAz",
+                    "value": 30
+                });
+                iframeDemo3.contentWindow.postMessage({
+                    "action": "setForcingTerm",
+                    "value": "vanishing"
                 });
             };
 

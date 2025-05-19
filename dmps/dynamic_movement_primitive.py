@@ -66,7 +66,7 @@ class DynamicMovementPrimitive:
             y = path
         return timesteps, y
 
-    def fit(self, y, dt=None, plot=False):
+    def fit(self, y, dt=None, plot=False, savefig=None):
         if dt is None:
             dt = self.cs.dt
         T = (len(y)-1)*dt
@@ -92,6 +92,7 @@ class DynamicMovementPrimitive:
 
         if plot:
             import matplotlib.pyplot as plt
+            fig, axes = plt.subplots(nrows=1, ncols=2)
             x = self.cs.convert_to_x(timesteps)
             psi = self.gen_psi(x)
             sum_psi = np.sum(psi, axis=1)
@@ -100,11 +101,20 @@ class DynamicMovementPrimitive:
                 f = np.dot(self.w[:,i], psi.T)*x/sum_psi
                 if scale[i] > 1e-6:
                     f *= scale[i]
-                plt.plot(timesteps, f)
-            plt.title("forcing term")
-            plt.figure()
-            plt.plot(timesteps, ftarget)
-            plt.title("ftarget")
+                axes[1].plot(timesteps, f, label="xyz"[i])
+            axes[1].set_title("forcing term")
+            axes[1].set_xlabel("time (s)")
+            axes[1].set_ylabel("acceleration ($m/s^2$)")
+            axes[1].legend()
+            for i in range(self.n_dmps):
+                axes[0].plot(timesteps, ftarget[:,i], label="xyz"[i])
+            axes[0].set_title("$f_\\mathrm{target}$")
+            axes[0].set_xlabel("time (s)")
+            axes[0].set_ylabel("acceleration ($m/s^2$)")
+            axes[0].legend()
+            plt.tight_layout()
+            if savefig is not None:
+                plt.savefig(savefig)
             plt.show()
 
     def step(self, y, yd, y0=None, g=None, x=1.0, tau=1.0):
